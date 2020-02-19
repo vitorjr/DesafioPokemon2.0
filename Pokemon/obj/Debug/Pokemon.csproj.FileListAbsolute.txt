@@ -1,0 +1,10 @@
+C:\FitBank\Pokemon\Pokemon\bin\Debug\Pokemon.exe.config
+C:\FitBank\Pokemon\Pokemon\bin\Debug\Pokemon.exe
+C:\FitBank\Pokemon\Pokemon\bin\Debug\Pokemon.pdb
+C:\FitBank\Pokemon\Pokemon\bin\Debug\HtmlAgilityPack.dll
+C:\FitBank\Pokemon\Pokemon\bin\Debug\HtmlAgilityPack.pdb
+C:\FitBank\Pokemon\Pokemon\bin\Debug\HtmlAgilityPack.xml
+C:\FitBank\Pokemon\Pokemon\obj\Debug\Pokemon.csprojAssemblyReference.cache
+C:\FitBank\Pokemon\Pokemon\obj\Debug\Pokemon.csproj.CopyComplete
+C:\FitBank\Pokemon\Pokemon\obj\Debug\Pokemon.exe
+C:\FitBank\Pokemon\Pokemon\obj\Debug\Pokemon.pdb

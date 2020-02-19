@@ -92,7 +92,9 @@ namespace Pokemon
             List<string> image_links = new List<string>();
             document.LoadHtml(source);
 
-            foreach (HtmlNode link in document.DocumentNode.SelectNodes("//div[@class=\"content-block content-block-full full-card-information animating\"]"))
+            HtmlNodeCollection nodesss = document.DocumentNode.SelectNodes("//div[@class=\"column-6 push-7\"]");
+
+            foreach (HtmlNode link in document.DocumentNode.SelectNodes("//section[@class=\"mosaic section card-detail\"]/div[@class=\"content-block content-block-full full-card-information animating\"]/"))
             {
 
                 HtmlNode aux = link.SelectSingleNode("./span");
