@@ -93,15 +93,21 @@ namespace Pokemon
             document.LoadHtml(source);
 
             HtmlNodeCollection nodesss = document.DocumentNode.SelectNodes("//div[@class=\"column-6 push-7\"]");
-            
+            HtmlNodeCollection node4 = document.DocumentNode.SelectNodes("//section[@class=\"mosaic section card-detail\"]");
 
-            foreach (HtmlNode link in nodesss)
+
+            foreach (HtmlNode link in node4)
             {
                 
-                HtmlNode testando = link.SelectSingleNode("./div[@class=\"color-block color-block-gray\"//h1");
-                HtmlNode aux = link.SelectSingleNode(".div[class=\"stats-footer\"]/span");
+                var testando = link.SelectSingleNode(".//div[@class='card-description']//h1").InnerText;
+                Console.WriteLine(testando);
+                var aux = link.SelectSingleNode(".//div[@class='pokemon-stats']//h3").InnerText;
+                Console.WriteLine(aux);
+                var modelos = link.SelectSingleNode(".//div[@class='pokemon-stats']//span").InnerText;
+
+                var imagem = link.SelectSingleNode(".//div[@class='column-6 push-1']//img").Attributes["src"].Value;
                 //image_links.Add(link.GetAttributeValue("span", ""));
-                Console.WriteLine(aux.InnerText);
+                //Console.WriteLine(aux.InnerText);
                 //Console.WriteLine(link.GetAttributeValue("span", "default"));
 
                 HtmlNode tipo = link.SelectSingleNode(".//a");
