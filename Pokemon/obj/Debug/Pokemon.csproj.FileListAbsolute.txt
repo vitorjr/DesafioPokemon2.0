@@ -8,3 +8,5 @@ C:\FitBank\Pokemon\Pokemon\obj\Debug\Pokemon.csprojAssemblyReference.cache
 C:\FitBank\Pokemon\Pokemon\obj\Debug\Pokemon.csproj.CopyComplete
 C:\FitBank\Pokemon\Pokemon\obj\Debug\Pokemon.exe
 C:\FitBank\Pokemon\Pokemon\obj\Debug\Pokemon.pdb
+C:\FitBank\Pokemon\Pokemon\bin\Debug\Newtonsoft.Json.dll
+C:\FitBank\Pokemon\Pokemon\bin\Debug\Newtonsoft.Json.xml
