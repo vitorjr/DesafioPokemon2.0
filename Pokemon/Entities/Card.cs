@@ -22,6 +22,9 @@ namespace Pokemon.Entities
         [DataMember]
         public string Url_imagem { get; set; }
 
-        
+        public override string ToString()
+        {
+            return "Nome da Carta: " + Nome + ", Modelo: " + Modelo + ", Tipo de Carta: " + Tipo_Carta + ", Url: " + Url_imagem+"\n"+"\n";                ;
+        }
     }
 }

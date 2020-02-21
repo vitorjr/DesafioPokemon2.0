@@ -30,7 +30,7 @@ namespace Pokemon
             string pagina = wc.DownloadString(url);
             int NumMaxPaginas = 845;
 
-
+            const string nomeArquivo = @"C:\FitBank\Pokemon\arquivo.json";
 
 
             htmlDocument.LoadHtml(pagina);
@@ -52,8 +52,9 @@ namespace Pokemon
 
                 //spanText.Add(("https://www.pokemon.com" + aux.GetAttributeValue("href", "default")));
                 //Console.WriteLine("Pegando o alt: " + aux2.GetAttributeValue("alt", "default"));
-                PegarTipo(temp);
+                PegarTipo(temp,nomeArquivo);
                 //PegarTipo2(temp);
+                
                 
             }
 
@@ -104,7 +105,7 @@ namespace Pokemon
             }
             return cartas;
         }
-            static void PegarTipo(String tipocard)
+            static void PegarTipo(String tipocard, string n)
         {
 
             WebClient x = new WebClient();
@@ -135,10 +136,28 @@ namespace Pokemon
                 //image_links.Add(link.GetAttributeValue("span", ""));
                 //Console.WriteLine(aux.InnerText);
                 //Console.WriteLine(link.GetAttributeValue("span", "default"));
-                
-            }
+                using (var streamWriter = new System.IO.StreamWriter("pedidos234.json", true))
+                {
+                    var json = Newtonsoft.Json.JsonConvert.SerializeObject(cartasss);
+                    streamWriter.WriteLine(json);
+                    
+                    
+                    //streamWriter.Close();
+                }
 
-            SerializarNewtonsoft(cartas);
+            }
+            //StreamWriter s = File.AppendText(@"C:\FitBank\Pokemon\pedidos2.json");
+            //s.WriteLine(cartas.ToString());
+            //s.Close();
+            
+            //List<string> linhas = File.ReadAllLines(n).ToList();
+            //linhas.Insert(0, "Primeira Linha");
+
+            //SerializarNewtonsoft(cartas);
+            //var j = File.ReadLines(AppDomain.CurrentDomain.BaseDirectory + @"\cartas-pokemon.json");
+            //var json_serial = JsonConvert.SerializeObject(cartas);
+            
+            
             
             
             
@@ -189,7 +208,8 @@ namespace Pokemon
             using (var streamWriter = new System.IO.StreamWriter("pedidos2.json"))
             {
                 var json = Newtonsoft.Json.JsonConvert.SerializeObject(pedidos);
-                streamWriter.Write(json);
+                streamWriter.WriteLine(json);
+                streamWriter.Close();
             }
         }
     }
