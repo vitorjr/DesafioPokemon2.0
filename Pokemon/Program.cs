@@ -16,48 +16,46 @@ namespace Pokemon
     class Program
     {
         static void Main(string[] args)
-        {  
+        {
+            List<string> spanText = new List<string>();
+            List<string> linktodo = new List<string>();
+            List<Card> cards = new List<Card>();
             /*
             Console.WriteLine("1 - Acesse o site https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/");
             Console.WriteLine("2 - Realize uma pesquisa sem preencher nenhum campo(Clicando em Search)");
             Console.WriteLine("3 - Informe abaixo a quantidade de páginas:");*/
 
             //HtmlDocument doc = web.Load(url_pokemon + "?cardName=&cardText=&evolvesFrom=&simpleSubmit=&format=unlimited&hitPointsMin=0&hitPointsMax=340&retreatCostMin=0&retreatCostMax=5&totalAttackCostMin=0&totalAttackCostMax=5&particularArtist=");
+            for (int i=1; i <= 5; i++) {
+                var htmlDocument = new HtmlAgilityPack.HtmlDocument();
 
-            var htmlDocument = new HtmlAgilityPack.HtmlDocument();
-            var wc = new WebClient();
-            string url = "https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/?cardName=&cardText=&evolvesFrom=&simpleSubmit=&format=unlimited&hitPointsMin=0&hitPointsMax=340&retreatCostMin=0&retreatCostMax=5&totalAttackCostMin=0&totalAttackCostMax=5&particularArtist=";
-            string pagina = wc.DownloadString(url);
-            int NumMaxPaginas = 845;
+                Encoding unicode = Encoding.Unicode;
+                var wc = new WebClient() ;                
+                string url = "https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/"+i+"?cardName=&cardText=&evolvesFrom=&simpleSubmit=&format=unlimited&hitPointsMin=0&hitPointsMax=340&retreatCostMin=0&retreatCostMax=5&totalAttackCostMin=0&totalAttackCostMax=5&particularArtist=";
+                string pagina = wc.DownloadString(url);
+                int NumMaxPaginas = 845;
+                const string nomeArquivo = @"C:\FitBank\Pokemon\arquivo.json";
+                htmlDocument.LoadHtml(pagina);
 
-            const string nomeArquivo = @"C:\FitBank\Pokemon\arquivo.json";
+                HtmlNodeCollection nodeCollection = htmlDocument.DocumentNode.SelectNodes("//div[@class='column-12 push-1 card-results-anchor']//li");
+
+                foreach (HtmlAgilityPack.HtmlNode node in nodeCollection)
+                {
+                    HtmlNode aux = node.SelectSingleNode("./a");
+                    HtmlNode aux2 = node.SelectSingleNode(".//img");
+                    String temp = ("https://www.pokemon.com" + aux.GetAttributeValue("href", "default"));
+                    Console.WriteLine(temp);
+                    Console.WriteLine(aux.GetAttributeValue("href", "default"));
+                    HtmlNode fix = node.SelectSingleNode("./a[@href]");
+
+                    //spanText.Add(("https://www.pokemon.com" + aux.GetAttributeValue("href", "default")));
+                    //Console.WriteLine("Pegando o alt: " + aux2.GetAttributeValue("alt", "default"));
+                    PegarTipo(temp, nomeArquivo);
+                    //PegarTipo2(temp);
 
 
-            htmlDocument.LoadHtml(pagina);
-
-            List<string> spanText = new List<string>();
-            List<string> linktodo = new List<string>();
-            List<Card> cards = new List<Card>();
-
-            HtmlNodeCollection nodeCollection = htmlDocument.DocumentNode.SelectNodes("//div[@class='column-12 push-1 card-results-anchor']//li");
-
-            foreach (HtmlAgilityPack.HtmlNode node in nodeCollection)
-            {
-                HtmlNode aux = node.SelectSingleNode("./a");
-                HtmlNode aux2 = node.SelectSingleNode(".//img");
-                String temp = ("https://www.pokemon.com" + aux.GetAttributeValue("href", "default"));
-                Console.WriteLine(temp);
-                Console.WriteLine(aux.GetAttributeValue("href", "default"));
-                HtmlNode fix = node.SelectSingleNode("./a[@href]");
-
-                //spanText.Add(("https://www.pokemon.com" + aux.GetAttributeValue("href", "default")));
-                //Console.WriteLine("Pegando o alt: " + aux2.GetAttributeValue("alt", "default"));
-                PegarTipo(temp,nomeArquivo);
-                //PegarTipo2(temp);
-                
-                
+                }
             }
-
             /*
             foreach (HtmlNode node in htmlDocument.GetElementbyId("cardResults").ChildNodes)
             {
@@ -125,9 +123,9 @@ namespace Pokemon
                 
                 string testando = link.SelectSingleNode(".//div[@class='card-description']//h1").InnerText;
                 Console.WriteLine(testando);
-                string aux = link.SelectSingleNode(".//div[@class='pokemon-stats']//h3").InnerText;
+                string aux = WebUtility.HtmlDecode(link.SelectSingleNode(".//div[@class='pokemon-stats']//h3/a").InnerText);
                 Console.WriteLine(aux);
-                string modelos = link.SelectSingleNode(".//div[@class='pokemon-stats']//span").InnerText;
+                string modelos = WebUtility.HtmlDecode(link.SelectSingleNode(".//div[@class='pokemon-stats']//span").InnerText);
                 Console.WriteLine(modelos);
                 string imagem = link.SelectSingleNode(".//div[@class='column-6 push-1']//img").Attributes["src"].Value;
                 Console.WriteLine(imagem);
