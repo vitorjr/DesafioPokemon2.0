@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Text;
 using Newtonsoft.Json;
-
+using System.Net.Http;
 
 namespace Pokemon
 {
@@ -23,53 +23,46 @@ namespace Pokemon
             /*
             Console.WriteLine("1 - Acesse o site https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/");
             Console.WriteLine("2 - Realize uma pesquisa sem preencher nenhum campo(Clicando em Search)");
-            Console.WriteLine("3 - Informe abaixo a quantidade de páginas:");*/
 
-            //HtmlDocument doc = web.Load(url_pokemon + "?cardName=&cardText=&evolvesFrom=&simpleSubmit=&format=unlimited&hitPointsMin=0&hitPointsMax=340&retreatCostMin=0&retreatCostMax=5&totalAttackCostMin=0&totalAttackCostMax=5&particularArtist=");
+            Console.WriteLine("3 - Informe abaixo a quantidade de páginas:");
+            Console.WriteLine("");
+             */
+
             for (int i=1; i <= 5; i++) {
-                var htmlDocument = new HtmlAgilityPack.HtmlDocument();
+                
+                string url = "https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/" + i + "?cardName=&cardText=&evolvesFrom=&simpleSubmit=&format=unlimited&hitPointsMin=0&hitPointsMax=340&retreatCostMin=0&retreatCostMax=5&totalAttackCostMin=0&totalAttackCostMax=5&particularArtist=";
 
-                Encoding unicode = Encoding.Unicode;
+                var Webget = new HtmlWeb();
+                Webget.OverrideEncoding = Encoding.UTF8;
+                var doc23 = Webget.Load(url);
+
+                var htmlDocument = new HtmlAgilityPack.HtmlDocument();
                 var wc = new WebClient() ;                
-                string url = "https://www.pokemon.com/us/pokemon-tcg/pokemon-cards/"+i+"?cardName=&cardText=&evolvesFrom=&simpleSubmit=&format=unlimited&hitPointsMin=0&hitPointsMax=340&retreatCostMin=0&retreatCostMax=5&totalAttackCostMin=0&totalAttackCostMax=5&particularArtist=";
+                
                 string pagina = wc.DownloadString(url);
                 int NumMaxPaginas = 845;
-                const string nomeArquivo = @"C:\FitBank\Pokemon\arquivo.json";
+                
                 htmlDocument.LoadHtml(pagina);
+                //HtmlNodeCollection nodeCollection = htmlDocument.DocumentNode.SelectNodes("//div[@class='column-12 push-1 card-results-anchor']//li");            
 
-                HtmlNodeCollection nodeCollection = htmlDocument.DocumentNode.SelectNodes("//div[@class='column-12 push-1 card-results-anchor']//li");
+                HtmlNodeCollection g = doc23.DocumentNode.SelectNodes("//div[@class='column-12 push-1 card-results-anchor']//li");
 
-                foreach (HtmlAgilityPack.HtmlNode node in nodeCollection)
+                foreach (HtmlAgilityPack.HtmlNode node in g)
                 {
-                    HtmlNode aux = node.SelectSingleNode("./a");
-                    HtmlNode aux2 = node.SelectSingleNode(".//img");
+                    HtmlNode aux = node.SelectSingleNode("./a");                    
                     String temp = ("https://www.pokemon.com" + aux.GetAttributeValue("href", "default"));
                     Console.WriteLine(temp);
-                    Console.WriteLine(aux.GetAttributeValue("href", "default"));
-                    HtmlNode fix = node.SelectSingleNode("./a[@href]");
-
-                    //spanText.Add(("https://www.pokemon.com" + aux.GetAttributeValue("href", "default")));
-                    //Console.WriteLine("Pegando o alt: " + aux2.GetAttributeValue("alt", "default"));
-                    PegarTipo(temp, nomeArquivo);
+                    
+                    PegarTipo(temp);
                     //PegarTipo2(temp);
-
-
                 }
             }
-            /*
-            foreach (HtmlNode node in htmlDocument.GetElementbyId("cardResults").ChildNodes)
-            {
-                if(node.Descendants().Count() > 0)
-                    href_imagem = node.Descendants().First(x => x.Attributes["class"] != null && x.Attributes["class"].Value.Equals("content-block content-block-full animating")).InnerText;
-                    //testeurl = node.Descendants().First(x => x.Equals("a")).InnerText;
-                    Console.WriteLine(href_imagem);
-            }
-
-            */
         }
 
         static List<Card> PegarTipo2(String tipocard)
         {
+
+
 
             WebClient x = new WebClient();
             string source = x.DownloadString(tipocard);
@@ -103,8 +96,14 @@ namespace Pokemon
             }
             return cartas;
         }
-            static void PegarTipo(String tipocard, string n)
+        static void PegarTipo(String tipocard)
         {
+            var Webget = new HtmlWeb();
+            //HttpClient = new HttpClient();
+            Webget.OverrideEncoding = Encoding.UTF8;
+            var doc23 = Webget.Load(tipocard);
+            string nomeArquivo = @"C:\FitBank\Pokemon\arquivo.json";
+
 
             WebClient x = new WebClient();
             string source = x.DownloadString(tipocard);
@@ -116,9 +115,9 @@ namespace Pokemon
             HtmlNodeCollection nodesss = document.DocumentNode.SelectNodes("//div[@class=\"column-6 push-7\"]");
             HtmlNodeCollection node4 = document.DocumentNode.SelectNodes("//section[@class=\"mosaic section card-detail\"]");
             
-            
+            HtmlNodeCollection h = doc23.DocumentNode.SelectNodes("//section[@class=\"mosaic section card-detail\"]");
 
-            foreach (HtmlNode link in node4)
+            foreach (HtmlNode link in h)
             {
                 
                 string testando = link.SelectSingleNode(".//div[@class='card-description']//h1").InnerText;
@@ -129,86 +128,34 @@ namespace Pokemon
                 Console.WriteLine(modelos);
                 string imagem = link.SelectSingleNode(".//div[@class='column-6 push-1']//img").Attributes["src"].Value;
                 Console.WriteLine(imagem);
-                var cartasss = new Card{ Nome = testando, Modelo = modelos, Tipo_Carta = aux, Url_imagem = imagem };
+
+                //var Img_aux = Convert.ToBase64String(new HttpClient().GetByteArrayAsync(link.SelectSingleNode(".//div[@class='column-6 push-1']//img").Attributes["src"].Value).Result);
+
+                byte[] bytes = Encoding.UTF8.GetBytes(imagem);
+                var encodeImage = Convert.ToBase64String(bytes);
+                Console.WriteLine(encodeImage);
+
+                var cartasss = new Card{ Nome = testando, Modelo = modelos, Tipo_Carta = aux, Url_imagem = encodeImage };
                 cartas.Add(cartasss);
-                //image_links.Add(link.GetAttributeValue("span", ""));
-                //Console.WriteLine(aux.InnerText);
-                //Console.WriteLine(link.GetAttributeValue("span", "default"));
-                using (var streamWriter = new System.IO.StreamWriter("pedidos234.json", true))
+                using (var streamWriter = new System.IO.StreamWriter(nomeArquivo, true))
                 {
                     var json = Newtonsoft.Json.JsonConvert.SerializeObject(cartasss);
-                    streamWriter.WriteLine(json);
-                    
-                    
-                    //streamWriter.Close();
+                    streamWriter.WriteLine(json);                    
                 }
-
-            }
-            //StreamWriter s = File.AppendText(@"C:\FitBank\Pokemon\pedidos2.json");
-            //s.WriteLine(cartas.ToString());
-            //s.Close();
-            
-            //List<string> linhas = File.ReadAllLines(n).ToList();
-            //linhas.Insert(0, "Primeira Linha");
-
-            //SerializarNewtonsoft(cartas);
-            //var j = File.ReadLines(AppDomain.CurrentDomain.BaseDirectory + @"\cartas-pokemon.json");
-            //var json_serial = JsonConvert.SerializeObject(cartas);
-            
-            
-            
-            
-            
-            
-            foreach(Card y in cartas)
-            {
-                Console.WriteLine(y.Nome);
-                Console.WriteLine(y.Tipo_Carta);
-            }
-            /*
-            foreach (HtmlNode link in node4)
-            {
-                
-                var testando = link.SelectSingleNode(".//div[@class='card-description']//h1").InnerText;
-                Console.WriteLine(testando);
-                var aux = link.SelectSingleNode(".//div[@class='pokemon-stats']//h3").InnerText;
-                Console.WriteLine(aux);
-                var modelos = link.SelectSingleNode(".//div[@class='pokemon-stats']//span").InnerText;
-                Console.WriteLine(modelos);
-                var imagem = link.SelectSingleNode(".//div[@class='column-6 push-1']//img").Attributes["src"].Value;
-                Console.WriteLine(imagem);
-                //cartas.Add(testando, aux, modelos, imagem);
-                //image_links.Add(link.GetAttributeValue("span", ""));
-                //Console.WriteLine(aux.InnerText);
-                //Console.WriteLine(link.GetAttributeValue("span", "default"));
-
-            }*/
-
-
-            /*
-            foreach (HtmlNode link in document.DocumentNode.SelectNodes("//div[@class=\"pokemon-stats\"]/div[@class=\"stats-footer\"]"))
-            {
-                HtmlNode aux = link.SelectSingleNode("./span");
-                //image_links.Add(link.GetAttributeValue("span", ""));
-                Console.WriteLine(aux.InnerText); 
-                //Console.WriteLine(link.GetAttributeValue("span", "default"));
-
-                HtmlNode tipo = link.SelectSingleNode(".//a");
-                Console.WriteLine(tipo.InnerText);
-
-                HtmlNode modelo = link.SelectSingleNode("");
-
-            }*/
+                SerializarNewtonsoft(cartas);
+            }            
         }
 
         private static void SerializarNewtonsoft(List<Card> pedidos)
         {
-            using (var streamWriter = new System.IO.StreamWriter("pedidos2.json"))
+            using (var streamWriter = new System.IO.StreamWriter("pedidos2.json", true))
             {
                 var json = Newtonsoft.Json.JsonConvert.SerializeObject(pedidos);
                 streamWriter.WriteLine(json);
                 streamWriter.Close();
             }
         }
+
+        
     }
 }
