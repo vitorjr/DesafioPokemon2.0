@@ -24,7 +24,7 @@ namespace Pokemon.Entities
 
         public override string ToString()
         {
-            return "Nome da Carta: " + Nome + ", Modelo: " + Modelo + ", Tipo de Carta: " + Tipo_Carta + ", Url: " + Url_imagem+"\n"+"\n";                ;
+            return "Nome da Carta: " + Nome + ", Modelo: " + Modelo + ", Tipo de Carta: " + Tipo_Carta + ", Url: " + Url_imagem+"\n";                ;
         }
     }
 }
