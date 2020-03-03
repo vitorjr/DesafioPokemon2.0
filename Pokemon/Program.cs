@@ -70,21 +70,27 @@ namespace Pokemon
 
                 foreach (HtmlNode dados in busca_dados)
                 {
+                    String imagem_temp = dados.SelectSingleNode(".//div[@class='column-6 push-1']//img").Attributes["src"].Value;
+                    String recebe = GetImageBase64ByUrlEncode(imagem_temp);
                     var cartas_itens = new Card
                     {
                         Nome = dados.SelectSingleNode(".//div[@class='card-description']//h1").InnerText,
                         Modelo = WebUtility.HtmlDecode(dados.SelectSingleNode(".//div[@class='pokemon-stats']//h3/a").InnerText),
                         Tipo_Carta = WebUtility.HtmlDecode(dados.SelectSingleNode(".//div[@class='pokemon-stats']//span").InnerText),
-                        Url_imagem = Convert.ToBase64String(new HttpClient().GetByteArrayAsync(dados.SelectSingleNode(".//div[@class='column-6 push-1']//img").Attributes["src"].Value).Result)
+                        //Url_imagem = Convert.ToBase64String(new HttpClient().GetByteArrayAsync(dados.SelectSingleNode(".//div[@class='column-6 push-1']//img").Attributes["src"].Value).Result)
+                        Url_imagem = recebe
                     };
                     cartas.Add(cartas_itens);
-                    var serializer = new JsonSerializer();
+                    File.WriteAllText(@"C:\FitBank\Pokemon\arquivo-pokemon.json", JsonConvert.SerializeObject(cartas_itens));
 
-                    using (var sw = new StreamWriter(nomeArquivo, true))
+
+                    //var serializer = new JsonSerializer();
+
+                    /*using (var sw = new StreamWriter(nomeArquivo, true))
                     using (JsonWriter writer = new JsonTextWriter(sw))
                     {
                         serializer.Serialize(writer, cartas_itens);
-                    }
+                    }*/
                     //Gravar_Json(cartas_itens);
                 }
             }
@@ -112,6 +118,12 @@ namespace Pokemon
                 var json = Newtonsoft.Json.JsonConvert.SerializeObject(carta_dados);
                 streamWriter.WriteLineAsync(json);
             }
+        }
+
+        public static string GetImageBase64ByUrlEncode(string url)
+        {
+            WebClient webClientencode = new WebClient();
+            return Convert.ToBase64String(webClientencode.DownloadData(url));
         }
     }
 }
