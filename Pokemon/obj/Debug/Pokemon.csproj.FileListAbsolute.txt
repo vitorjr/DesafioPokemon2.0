@@ -10,3 +10,5 @@ C:\FitBank\Pokemon\Pokemon\obj\Debug\Pokemon.exe
 C:\FitBank\Pokemon\Pokemon\obj\Debug\Pokemon.pdb
 C:\FitBank\Pokemon\Pokemon\bin\Debug\Newtonsoft.Json.dll
 C:\FitBank\Pokemon\Pokemon\bin\Debug\Newtonsoft.Json.xml
+C:\FitBank\Pokemon\Pokemon\bin\Debug\System.Threading.Tasks.Dataflow.dll
+C:\FitBank\Pokemon\Pokemon\bin\Debug\System.Threading.Tasks.Dataflow.xml

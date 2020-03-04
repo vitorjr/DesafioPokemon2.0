@@ -22,9 +22,26 @@ namespace Pokemon.Entities
         [DataMember]
         public string Url_imagem { get; set; }
 
+        public Card() { }
+
+        public Card(string nome, string modelo, string tipo_Carta, string url_imagem)
+        {
+            Nome = nome;
+            Modelo = modelo;
+            Tipo_Carta = tipo_Carta;
+            Url_imagem = url_imagem;
+        }
+
         public override string ToString()
         {
-            return "Nome da Carta: " + Nome + ", Modelo: " + Modelo + ", Tipo de Carta: " + Tipo_Carta + ", Url: " + Url_imagem+"\n";                ;
+            StringBuilder x = new StringBuilder();
+
+            x.AppendLine($"- Nome: {Nome}")
+                .AppendLine($"- Modelo: {Modelo}")
+                .AppendLine($"- Tipo de Carta: {Tipo_Carta}")
+                .AppendLine($"- Imagem Base64: {Url_imagem}");
+
+            return x.ToString();
         }
     }
 }

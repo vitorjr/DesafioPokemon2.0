@@ -10,13 +10,17 @@ using System.Web.Script.Serialization;
 using System.Text;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Threading.Tasks.Dataflow;
+using System.Collections.Concurrent;
 
 namespace Pokemon
 {
     class Program
     {
+        static bool multipleFiles = false;
         static void Main(string[] args)
-        {            
+        {
+            
             List<String> listas_cartas = new List<string>();
             int NumMaxPaginas = 2;
 
@@ -41,16 +45,7 @@ namespace Pokemon
                     listas_cartas.Add(url_cartas);
                     // Acessar_CartasPokemon(url_cartas);
 
-                });
-                /*
-                foreach (HtmlAgilityPack.HtmlNode node in busca_main)
-                {
-                    HtmlNode link = node.SelectSingleNode("./a");
-                    String url_cartas = ("https://www.pokemon.com" + link.GetAttributeValue("href", "default"));
-                    Console.WriteLine(url_cartas);
-                    listas_cartas.Add(url_cartas);
-                    //Acessar_CartasPokemon(url_cartas);                    
-                }*/
+                });                
             });
             Acessar_CartasPokemon(listas_cartas);
         }
@@ -81,7 +76,7 @@ namespace Pokemon
                         Url_imagem = recebe
                     };
                     cartas.Add(cartas_itens);
-                    File.WriteAllText(@"C:\FitBank\Pokemon\arquivo-pokemon.json", JsonConvert.SerializeObject(cartas_itens));
+                    //File.WriteAllText(@"C:\FitBank\Pokemon\arquivo-pokemon.json", JsonConvert.SerializeObject(cartas_itens));
 
 
                     //var serializer = new JsonSerializer();
@@ -93,6 +88,11 @@ namespace Pokemon
                     }*/
                     //Gravar_Json(cartas_itens);
                 }
+            }
+            using (StreamWriter file = File.CreateText(Json.GetPath("single_file_pokemons.json")))
+            {
+                var json = Newtonsoft.Json.JsonConvert.SerializeObject(cartas);
+                file.WriteLine(json);
             }
         }
 
@@ -113,17 +113,44 @@ namespace Pokemon
                 }
             }
 
-            using (var streamWriter = new System.IO.StreamWriter(nomeArquivo, true))
+            using (StreamWriter file = File.CreateText(Json.GetPath("single_file_pokemons.json")))
             {
                 var json = Newtonsoft.Json.JsonConvert.SerializeObject(carta_dados);
-                streamWriter.WriteLineAsync(json);
+                file.WriteLine(json);
             }
+
+            
         }
 
         public static string GetImageBase64ByUrlEncode(string url)
         {
             WebClient webClientencode = new WebClient();
             return Convert.ToBase64String(webClientencode.DownloadData(url));
+        }
+
+        static async Task ConsumeAsync(ISourceBlock<Card> source)
+        {
+            BlockingCollection<Card> bag = new BlockingCollection<Card>();
+
+            while (await source.OutputAvailableAsync())
+            {
+                Card data = (Card)source.Receive();
+                bag.Add(data);
+            }
+
+            if (!multipleFiles)
+                await CreateSingleFile(bag);
+            //else
+                //await CreateMultipleFile(bag);
+        }
+
+        static async Task CreateSingleFile(BlockingCollection<Card> list)
+        {
+            using (StreamWriter file = File.CreateText(Json.GetPath("single_file_pokemons.json")))
+            {
+                var json5 = Newtonsoft.Json.JsonConvert.SerializeObject(list);
+                await file.WriteLineAsync(json5);
+            }
         }
     }
 }
