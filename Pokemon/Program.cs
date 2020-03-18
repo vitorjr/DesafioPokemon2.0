@@ -28,7 +28,7 @@ namespace Pokemon
 
             Console.WriteLine("3 - Informe abaixo a quantidade de páginas:");
             Console.WriteLine("");*/
-            Acessar_Links(4);
+            Acessar_Links(2);
 
             
         }
@@ -71,29 +71,29 @@ namespace Pokemon
                 Parallel.ForEach(busca_dados, dados => {
                     String imagem_temp = dados.SelectSingleNode(".//div[@class='column-6 push-1']//img").Attributes["src"].Value;
                     String recebe = GetImageBase64ByUrlEncode(imagem_temp);
-                    /*var cartas_itens = new Card
+                    var cartas_itens = new Card
                     {
                         Nome = dados.SelectSingleNode(".//div[@class='card-description']//h1").InnerText,
                         Modelo = WebUtility.HtmlDecode(dados.SelectSingleNode(".//div[@class='pokemon-stats']//h3/a").InnerText),
                         Tipo_Carta = WebUtility.HtmlDecode(dados.SelectSingleNode(".//div[@class='pokemon-stats']//span").InnerText),
                         //Url_imagem = Convert.ToBase64String(new HttpClient().GetByteArrayAsync(dados.SelectSingleNode(".//div[@class='column-6 push-1']//img").Attributes["src"].Value).Result)
                         Url_imagem = recebe
-                    };*/
-                    String nome = dados.SelectSingleNode(".//div[@class='card-description']//h1").InnerText;
+                    };
+                    /*String nome = dados.SelectSingleNode(".//div[@class='card-description']//h1").InnerText;
                     String numeracao = WebUtility.HtmlDecode(dados.SelectSingleNode(".//div[@class='pokemon-stats']//h3/a").InnerText);
                     String expansao = WebUtility.HtmlDecode(dados.SelectSingleNode(".//div[@class='pokemon-stats']//span").InnerText);
                     String base64 = recebe;
-                    buffer.Post(new Card(nome,numeracao,expansao,base64));
-                    //cartas.Add(cartas_itens);
+                    buffer.Post(new Card(nome,numeracao,expansao,base64));*/
+                    cartas.Add(cartas_itens);
                 });
             });
-            buffer.Complete();
-            var consume = ConsumeAsync(buffer);
-            /*using (StreamWriter file = File.CreateText(Json.GetPath("single_file_pokemons.json")))
+            //buffer.Complete();
+            //var consume = ConsumeAsync(buffer);
+            using (StreamWriter file = File.CreateText(Json.GetPath("single_file_pokemons.json")))
             {
                 var json = Newtonsoft.Json.JsonConvert.SerializeObject(cartas);
                 file.WriteLine(json);
-            }*/
+            }
             
         }
 

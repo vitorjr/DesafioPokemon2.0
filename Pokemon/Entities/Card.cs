@@ -39,7 +39,8 @@ namespace Pokemon.Entities
             x.AppendLine($"- Nome: {Nome}")
                 .AppendLine($"- Modelo: {Modelo}")
                 .AppendLine($"- Tipo de Carta: {Tipo_Carta}")
-                .AppendLine($"- Imagem Base64: {Url_imagem}");
+                .AppendLine($"- Imagem Base64: {Url_imagem}")
+                .AppendLine();
 
             return x.ToString();
         }
